@@ -1,0 +1,114 @@
+#rvt-subtitle-root {
+  position: fixed;
+  left: 50%;
+  bottom: 7vh;
+  z-index: 2147483647;
+  width: min(760px, calc(100vw - 32px));
+  transform: translateX(-50%);
+  box-sizing: border-box;
+  padding: 0 8px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: #f8fafc;
+  box-shadow: none;
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  pointer-events: none;
+  opacity: 0;
+  transition:
+    opacity 160ms ease,
+    transform 160ms ease;
+  backdrop-filter: none;
+}
+
+video::cue {
+  background-color: rgba(0, 0, 0, 0.08);
+  color: #ffffff;
+  text-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.85),
+    0 0 6px rgba(0, 0, 0, 0.65);
+}
+
+#rvt-subtitle-root[data-visible="true"] {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.rvt-subtitle-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+  color: rgba(226, 232, 240, 0.8);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.rvt-subtitle-status {
+  color: #67e8f9;
+  text-transform: none;
+}
+
+.rvt-subtitle-body {
+  display: grid;
+  gap: 6px;
+}
+
+.rvt-subtitle-source,
+.rvt-subtitle-translation {
+  margin: 0;
+  overflow-wrap: anywhere;
+  text-align: center;
+}
+
+.rvt-subtitle-source {
+  color: rgba(226, 232, 240, 0.86);
+  font-size: clamp(14px, 1.6vw, 18px);
+  line-height: 1.36;
+  text-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.85),
+    0 0 5px rgba(0, 0, 0, 0.65);
+}
+
+.rvt-subtitle-translation {
+  color: #ffffff;
+  font-size: clamp(14px, 1.84vw, 22px);
+  font-weight: 750;
+  line-height: 1.28;
+  text-shadow:
+    0 2px 3px rgba(0, 0, 0, 0.9),
+    0 0 8px rgba(0, 0, 0, 0.72);
+}
+
+.rvt-subtitle-history {
+  display: grid;
+  gap: 3px;
+  margin-top: 4px;
+}
+
+.rvt-history-row {
+  color: rgba(226, 232, 240, 0.58);
+  font-size: 13px;
+  line-height: 1.3;
+  text-align: center;
+}
+
+#rvt-subtitle-root[data-phase="interim"] .rvt-subtitle-translation {
+  color: #dbeafe;
+}
+
+@media (max-width: 640px) {
+  #rvt-subtitle-root {
+    bottom: 16px;
+    width: calc(100vw - 20px);
+    padding: 0 6px;
+  }
+
+  .rvt-subtitle-header {
+    font-size: 10px;
+  }
+}

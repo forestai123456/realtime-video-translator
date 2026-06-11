@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Realtime Subtitle Test</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        min-height: 100%;
+        background: #10131c;
+        color: #f8fafc;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      main {
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        padding: 28px;
+        box-sizing: border-box;
+      }
+
+      video {
+        width: min(1180px, 94vw);
+        aspect-ratio: 16 / 9;
+        background: #070a12;
+        border-radius: 8px;
+        box-shadow: 0 24px 80px rgba(0, 0, 0, 0.5);
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <video id="video" controls src="/subtitle-test.mp4"></video>
+    </main>
+  </body>
+</html>

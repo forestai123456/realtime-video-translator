@@ -1,0 +1,23 @@
+{
+  "name": "realtime-video-translator",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Chrome MV3 extension prototype for realtime AI video subtitles and translation.",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "dev:server": "node scripts/realtime-translation-server.mjs",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.0.326",
+    "@types/ws": "^8.18.1",
+    "esbuild": "^0.25.5",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "pdf-parse": "^2.4.5",
+    "ws": "^8.21.0"
+  }
+}
