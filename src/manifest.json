@@ -1,12 +1,12 @@
 {
   "manifest_version": 3,
-  "name": "实时视频翻译",
+  "name": "听我解释",
   "version": "0.0.0",
   "description": "为网页视频生成实时字幕，并支持视频、网页和 PDF 翻译。",
   "permissions": ["activeTab", "storage", "tabCapture", "offscreen", "scripting"],
   "host_permissions": ["<all_urls>"],
   "action": {
-    "default_title": "实时视频翻译",
+    "default_title": "听我解释",
     "default_popup": "popup/popup.html"
   },
   "background": {

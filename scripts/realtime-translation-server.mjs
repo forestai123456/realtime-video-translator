@@ -959,7 +959,7 @@ async function handleHttpRequest(request, response) {
   response.end(
     JSON.stringify({
       ok: true,
-      service: "realtime-video-translator",
+      service: "hear-me-out",
       provider: "volcengine",
       translationProvider,
       pageTranslationProvider,
@@ -1014,7 +1014,7 @@ function buildHeader(messageType, flags) {
 
 function buildFullClientRequest(sequence) {
   const payload = {
-    user: { uid: "realtime-video-translator" },
+    user: { uid: "hear-me-out" },
     audio: {
       format: "wav",
       codec: "raw",

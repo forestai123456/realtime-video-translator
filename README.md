@@ -1,6 +1,6 @@
-# Realtime Video Translator
+# 听我解释 (Hear Me Out)
 
-Chrome MV3 extension prototype for low-latency AI video subtitles and translation.
+Chrome MV3 扩展 — 为网页视频生成实时字幕，支持视频、网页和 PDF 翻译。
 
 ## Repository Status
 

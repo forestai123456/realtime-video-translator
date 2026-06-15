@@ -1,8 +1,8 @@
 {
-  "name": "realtime-video-translator",
+  "name": "hear-me-out",
   "version": "0.1.0",
   "type": "module",
-  "description": "Chrome MV3 extension prototype for realtime AI video subtitles and translation.",
+  "description": "听我解释 - Chrome MV3 extension for realtime AI video subtitles and translation.",
   "license": "MIT",
   "repository": {
     "type": "git",
