@@ -71,7 +71,7 @@ let pendingStableCaption: { caption: CaptionUpdate; allowFragment: boolean } | n
 let stableCaptionTimer: number | null = null;
 let autoPageTranslationEnabled = false;
 let autoPageTranslationTargetLanguage = "zh-CN";
-let selectionTranslationEnabled = true;
+let selectionTranslationEnabled = false;
 let selectionTranslationTargetLanguage = "zh-CN";
 let subtitleStyle: SubtitleStyle = "bold";
 let showOriginal = false;
@@ -168,8 +168,17 @@ async function initAutoPageTranslation(): Promise<void> {
   if (!isExtensionRuntimeAvailable()) return;
   installAutoPageTranslationWatchers();
   const response = await sendRuntimeMessageSafe<RuntimeResponse>({ type: "translator:settings:get" } satisfies RuntimeMessage);
-  if (!response?.ok || !response.settings) return;
+  if (!response?.ok || !response.settings) {
+    // Settings fetch failed — apply safe defaults so features stay off.
+    console.warn("[hear-me-out] settings fetch failed, applying defaults");
+    updateSettingsState({});
+    return;
+  }
 
+  console.log("[hear-me-out] init settings:", JSON.stringify({
+    autoTranslatePages: response.settings.autoTranslatePages,
+    selectionTranslationEnabled: response.settings.selectionTranslationEnabled,
+  }));
   updateSettingsState(response.settings);
 }
 
@@ -200,9 +209,13 @@ function installAutoPageTranslationWatchers(): void {
 }
 
 function handleStorageChanged(changes: { [key: string]: chrome.storage.StorageChange }, areaName: string): void {
-  if (!isExtensionRuntimeAvailable()) return;
   if ((areaName !== "local" && areaName !== "sync") || !changes.settings?.newValue) return;
-  updateSettingsState(changes.settings.newValue as Partial<TranslatorSettings>);
+  const newSettings = changes.settings.newValue as Record<string, unknown>;
+  console.log("[hear-me-out] storage changed:", JSON.stringify({
+    autoTranslatePages: newSettings.autoTranslatePages,
+    selectionTranslationEnabled: newSettings.selectionTranslationEnabled,
+  }));
+  updateSettingsState(newSettings as unknown as Partial<TranslatorSettings>);
 }
 
 function updateSettingsState(settings: Partial<TranslatorSettings>): void {
@@ -256,6 +269,11 @@ function updateAutoPageTranslationState(enabled: boolean, targetLanguage: string
     window.clearTimeout(autoPageTranslationTimer);
     autoPageTranslationTimer = null;
   }
+  // Bump the run id BEFORE restoring so any batch that resolves right
+  // after the user flipped the switch off can no longer overwrite the
+  // restored text. restorePage() also bumps it, but doing it here too
+  // covers the (very short) window where restorePage has not run yet.
+  activePageTranslationRunId += 1;
   restorePage();
 }
 
@@ -1526,6 +1544,10 @@ async function translatePageBatch(
 }
 
 function restorePage(): number {
+  // Bump the run id so any in-flight translation batches (or auto-translate
+  // timers that fire mid-restore) become stale and bail out in their
+  // runId check, instead of stomping the freshly restored DOM nodes.
+  activePageTranslationRunId += 1;
   const restored = translatedTextNodes.length;
   pausePageTranslationObserver();
   try {

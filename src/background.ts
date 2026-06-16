@@ -11,7 +11,6 @@ import {
 
 const OFFSCREEN_DOCUMENT_PATH = "offscreen/offscreen.html";
 const PDF_TRANSLATION_STORAGE_PREFIX = "pdfTranslation:";
-const AUTO_TRANSLATION_DELAY_MS = 900;
 const runningTabs = new Map<number, { mode: "mock" | "websocket"; suspended?: boolean }>();
 
 chrome.runtime.onInstalled.addListener(async () => {
@@ -30,11 +29,6 @@ chrome.runtime.onMessage.addListener((message: RuntimeMessage, sender, sendRespo
 chrome.tabs.onRemoved.addListener((tabId) => {
   runningTabs.delete(tabId);
   void chrome.runtime.sendMessage({ type: "offscreen:stop", tabId } satisfies RuntimeMessage).catch(() => undefined);
-});
-
-chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  if (changeInfo.status !== "complete") return;
-  void triggerAutoPageTranslation(tabId, tab.url).catch(() => undefined);
 });
 
 async function handleMessage(message: RuntimeMessage, sender: chrome.runtime.MessageSender): Promise<RuntimeResponse> {
@@ -142,21 +136,6 @@ async function startTabCaptureSession(tabId: number, settings: TranslatorSetting
 
   await chrome.tabs.sendMessage(tabId, { type: "caption:state", running: true, mode } satisfies RuntimeMessage, { frameId: 0 }).catch(() => undefined);
   return mode;
-}
-
-async function triggerAutoPageTranslation(tabId: number, initialUrl?: string): Promise<void> {
-  if (!isAutoPageTranslationUrl(initialUrl)) return;
-
-  const settings = await getSettings();
-  if (!settings.autoTranslatePages) return;
-
-  await wait(AUTO_TRANSLATION_DELAY_MS);
-
-  const tab = await chrome.tabs.get(tabId).catch(() => undefined);
-  if (!tab?.id || !isAutoPageTranslationUrl(tab.url)) return;
-  if (initialUrl && tab.url && initialUrl !== tab.url) return;
-
-  await translatePageInTab(tabId, settings.targetLanguage, settings).catch(() => undefined);
 }
 
 async function translatePageInTab(
@@ -289,9 +268,8 @@ function getMediaStreamId(tabId: number): Promise<string> {
 async function translateBatch(texts: string[], targetLanguage: string, settings: TranslatorSettings): Promise<string[]> {
   const endpoint = toTranslateEndpoint(settings.backendUrl || DEFAULT_SETTINGS.backendUrl);
   const translation = settings.translation;
-  const hasExplicitApiKey = translation?.apiKey?.trim();
   const body: Record<string, unknown> = { texts, targetLanguage };
-  if (hasExplicitApiKey || (translation?.provider && translation.provider !== "microsoft")) {
+  if (translation?.provider) {
     body.translation = translation;
   }
   const response = await fetch(endpoint, {

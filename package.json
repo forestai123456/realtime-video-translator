@@ -1,17 +1,17 @@
 {
-  "name": "hear-me-out",
+  "name": "听我解释",
   "version": "0.1.0",
   "type": "module",
   "description": "听我解释 - Chrome MV3 extension for realtime AI video subtitles and translation.",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/forestai123456/realtime-video-translator.git"
+    "url": "https://github.com/forestai123456/听我解释.git"
   },
   "bugs": {
-    "url": "https://github.com/forestai123456/realtime-video-translator/issues"
+    "url": "https://github.com/forestai123456/听我解释/issues"
   },
-  "homepage": "https://github.com/forestai123456/realtime-video-translator#readme",
+  "homepage": "https://github.com/forestai123456/听我解释#readme",
   "scripts": {
     "build": "node scripts/build.mjs",
     "dev:server": "node scripts/realtime-translation-server.mjs",

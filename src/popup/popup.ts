@@ -121,7 +121,6 @@ const TRANSLATION_PRESETS: Record<TranslationProviderId, TranslationPreset> = {
   },
 };
 
-const statusEl = getElement<HTMLSpanElement>("status");
 const subtitleToggle = getElement<HTMLInputElement>("subtitleToggle");
 const translationModeInput = getElement<HTMLSelectElement>("translationMode");
 const subtitleStyleInput = getElement<HTMLSelectElement>("subtitleStyle");
@@ -311,12 +310,10 @@ async function refreshStatus(): Promise<void> {
     response = undefined;
   }
   if (!response || !response.ok) {
-    statusEl.textContent = "不可用";
     subtitleToggle.checked = false;
     return;
   }
   subtitleToggle.checked = Boolean(response.running);
-  statusEl.textContent = response.running ? "运行中" : "已停止";
 }
 
 async function saveSettings(): Promise<void> {
@@ -341,7 +338,7 @@ function renderSettings(settings: TranslatorSettings): void {
   const translation = settings.translation ?? DEFAULT_SETTINGS.translation;
   targetLanguageInput.value = settings.targetLanguage ?? "zh-CN";
   autoTranslatePagesInput.checked = settings.autoTranslatePages ?? false;
-  selectionTranslationInput.checked = settings.selectionTranslationEnabled ?? true;
+  selectionTranslationInput.checked = settings.selectionTranslationEnabled ?? false;
   subtitleStyleInput.value = settings.subtitleStyle ?? "bold";
   translationModeInput.value = settings.showOriginal && settings.showTranslation ? "bilingual" : "translation";
 
@@ -370,7 +367,7 @@ function renderSettings(settings: TranslatorSettings): void {
 function renderFallbackSettings(): void {
   targetLanguageInput.value = "zh-CN";
   autoTranslatePagesInput.checked = false;
-  selectionTranslationInput.checked = true;
+  selectionTranslationInput.checked = false;
   subtitleStyleInput.value = "bold";
   translationModeInput.value = "translation";
 
@@ -496,7 +493,6 @@ function showMessage(message: string): void {
 }
 
 function renderFallbackStatus(): void {
-  statusEl.textContent = "不可用";
   subtitleToggle.checked = false;
 }
 

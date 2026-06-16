@@ -131,7 +131,7 @@ export const DEFAULT_SETTINGS: TranslatorSettings = {
   },
   mockWhenBackendMissing: false,
   autoTranslatePages: false,
-  selectionTranslationEnabled: true,
+  selectionTranslationEnabled: false,
   showOriginal: false,
   showTranslation: true,
   subtitleStyle: "bold",
